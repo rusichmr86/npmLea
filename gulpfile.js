@@ -13,7 +13,8 @@ var gulp = require('gulp'),
     autoprefixer = require('gulp-autoprefixer'),
     ftp = require('vinyl-ftp'),
     notify = require("gulp-notify"),
-    rsync = require('gulp-rsync');
+    rsync = require('gulp-rsync'),
+    path = require('path');
 
 gulp.task('browser-sync', function () {
     browserSync({
@@ -58,18 +59,19 @@ gulp.task('sass', function () {
         .pipe(browserSync.stream())
 });
 
-var less = require('gulp-less');
-var path = require('path');
 
 gulp.task('less', function () {
-    return gulp.src('./less/**/*.less')
-        .pipe(less({
-            paths: [ path.join(__dirname, 'less', 'includes') ]
-        }))
-        .pipe(gulp.dest('./public/css'));
+    return gulp.src('app/less/**/*.less')
+        .pipe(less({outputStyle: 'expanded'}).on("error", notify.onError()))
+        .pipe(rename({suffix: '.min', prefix: ''}))
+        .pipe(autoprefixer(['last 15 versions']))
+        .pipe(cleanCSS()) // Опционально, закомментировать при отладке
+        .pipe(gulp.dest('app/css'))
+        .pipe(browserSync.stream())
 });
 
-gulp.task('watch', ['sass','less', 'js', 'browser-sync'], function () {
+gulp.task('watch', ['sass', 'less', 'js', 'browser-sync'], function () {
+    gulp.watch('app/less/**/*.less', ['less']);
     gulp.watch('app/sass/**/*.sass', ['sass']);
     gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['js']);
     gulp.watch('app/*.html', browserSync.reload);
