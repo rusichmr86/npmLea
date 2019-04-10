@@ -62,17 +62,21 @@ gulp.task('js', ['common-js'], function () {
 
 gulp.task('less', function () {
     return gulp.src('app/less/**/*.less')
-        .pipe(less({outputStyle: 'expanded'}).on("error", notify.onError()))
+        // таких options вроде нет у npm-less
+        //.pipe(less({outputStyle: 'expanded'}).on("error", notify.onError())) 
+    
         .pipe(rename({suffix: '.min', prefix: ''}))
         .pipe(autoprefixer(['last 15 versions']))
-        //.pipe(cleanCSS()) // Опционально, закомментировать при отладке
+    
+        // TODO: раскомментировать для продакшена
+        //.pipe(cleanCSS()) 
         .pipe(gulp.dest('app/css'))
         .pipe(browserSync.stream())
 });
 
-gulp.task('watch', [/*'sass',*/ 'less', 'js', 'browser-sync'], function () {
+gulp.task('watch', ['less', 'js', 'browser-sync'], function () {
     gulp.watch('app/less/**/*.less', ['less']);
-    gulp.watch('app/sass/**/*.sass', ['sass']);
+    //gulp.watch('app/sass/**/*.sass', ['sass']);
     gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['js']);
     gulp.watch('app/*.html', browserSync.reload);
 });
