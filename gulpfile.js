@@ -1,6 +1,6 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
-    sass = require('gulp-sass'),
+   // sass = require('gulp-sass'),
     less = require('gulp-less'),
     browserSync = require('browser-sync'),
     concat = require('gulp-concat'),
@@ -13,8 +13,8 @@ var gulp = require('gulp'),
     autoprefixer = require('gulp-autoprefixer'),
     ftp = require('vinyl-ftp'),
     notify = require("gulp-notify"),
-    rsync = require('gulp-rsync'),
-    path = require('path');
+    rsync = require('gulp-rsync');
+    //path = require('path');
 
 gulp.task('browser-sync', function () {
     browserSync({
@@ -49,15 +49,15 @@ gulp.task('js', ['common-js'], function () {
         .pipe(browserSync.reload({stream: true}));
 });
 
-gulp.task('sass', function () {
-    return gulp.src('app/sass/**/*.sass')
+/*gulp.task('sass', function () {
+    return gulp.src('app/sass/!**!/!*.sass')
         .pipe(sass({outputStyle: 'expanded'}).on("error", notify.onError()))
         .pipe(rename({suffix: '.min', prefix: ''}))
         .pipe(autoprefixer(['last 15 versions']))
-        .pipe(cleanCSS()) // Опционально, закомментировать при отладке
+      //  .pipe(cleanCSS()) // Опционально, закомментировать при отладке
         .pipe(gulp.dest('app/css'))
         .pipe(browserSync.stream())
-});
+});*/
 
 
 gulp.task('less', function () {
@@ -65,12 +65,12 @@ gulp.task('less', function () {
         .pipe(less({outputStyle: 'expanded'}).on("error", notify.onError()))
         .pipe(rename({suffix: '.min', prefix: ''}))
         .pipe(autoprefixer(['last 15 versions']))
-        .pipe(cleanCSS()) // Опционально, закомментировать при отладке
+        //.pipe(cleanCSS()) // Опционально, закомментировать при отладке
         .pipe(gulp.dest('app/css'))
         .pipe(browserSync.stream())
 });
 
-gulp.task('watch', ['sass', 'less', 'js', 'browser-sync'], function () {
+gulp.task('watch', [/*'sass',*/ 'less', 'js', 'browser-sync'], function () {
     gulp.watch('app/less/**/*.less', ['less']);
     gulp.watch('app/sass/**/*.sass', ['sass']);
     gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['js']);
